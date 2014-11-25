@@ -1,0 +1,12 @@
+.idea
+calendar_ex/client_secret.json
+calendar_ex/key.json
+*.pyc
+
+/# links #/
+apiclient
+google
+googleapiclient
+httplib2
+oauth2client
+uritemplate

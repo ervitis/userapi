@@ -1,0 +1,13 @@
+application: gae-exercises
+version: 2
+runtime: python27
+threadsafe: true
+api_version: 1
+
+inbound_services:
+- warmup
+
+handlers:
+- url: /.*
+  script: user_exercise.app
+  login: required
