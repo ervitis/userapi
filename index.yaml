@@ -1,0 +1,7 @@
+indexes:
+
+- kind: Store
+  ancestor: yes
+  properties:
+  - name: owner
+    direction: asc
