@@ -1,14 +1,20 @@
 
 import webapp2
 import models
+import time
 import cgi
 
-
+SECONDS = 0.2
 MAIN_PAGE_FOOTER_TEMPLATE = """
     <form action="/sign" method="post">
       <div>Owner: <input type="text" name="owner"></div>
       <div>Business: <input type="text" name="business"></div>
       <div><input type="submit" value="Send it!"></div>
+    </form>
+
+    <form action="/search" method="post">
+      <div>Search owner: <input type="text" name="searchOwner"></div>
+      <div><input type="submit" value="Search!"></div>
     </form>
   </body>
 </html>
@@ -19,11 +25,10 @@ class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write('<html><body>')
 
-        key = models.ConstructKey(name='stores')
-        stores = models.Store.query(ancestor=key.create_key()).order(models.Store.owner).fetch()
+        stores = models.Store.all()
 
         for store in stores:
-            store_id = str(store.key.id())
+            store_id = str(store.key().id_or_name())
             self.response.write('<a href="/detail/id=%s">Owner %s</a><br>' % (store_id, cgi.escape(store.owner)))
             self.response.write('Business %s<br><br>' % cgi.escape(store.business))
 
@@ -35,34 +40,56 @@ class Sign(webapp2.RequestHandler):
         owner = self.request.get('owner')
         business = self.request.get('business')
 
-        key = models.ConstructKey(name='stores')
-
-        store = models.Store(parent=key.create_key())
+        store = models.Store()
 
         store.business = business
         store.owner = owner
 
         store.put()
 
-        self.redirect('/')
+        time.sleep(SECONDS)
+        self.redirect('/', permanent=True)
 
 
 class Detail(webapp2.RequestHandler):
     def get(self, id):
-        key = models.ConstructKey(name='stores')
-
-        store = models.Store.get_by_id(id=int(id), parent=key.create_key())
+        store = models.Store().get_by_id(ids=int(id))
 
         if store:
             self.response.write('Detail for key id=%s: Owner->%s, business->%s'
-                                % (store.key.id(), store.owner, store.business))
+                                % (str(store.key().id_or_name()), store.owner, store.business))
         else:
             self.response.write('Error!')
 
-        self.response.write()
+        print_goback_link(self)
+
+
+class Search(webapp2.RequestHandler):
+    def post(self):
+        owner = self.request.get('searchOwner')
+
+        if not owner:
+            self.response.write('No search parameters!')
+            print_goback_link(self)
+
+        q = models.Store().all()
+        results = q.filter('owner =', owner).run()
+
+        self.response.write('<br>Results:')
+        for result in results:
+            self.response.write('<br> Id: %s, owner: %s, business: %s' %
+                                (str(result.key().id_or_name()), result.owner, result.business))
+
+        print_goback_link(self)
+
+
+def print_goback_link(obj_self):
+    obj_self.response.write('<br>')
+    obj_self.response.write('<br><br><a href="/">Volver atras</a>')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/sign', Sign),
     ('/detail/id=(\d+)', Detail),
+    ('/search', Search),
 ], debug=True)
