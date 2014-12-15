@@ -1,0 +1,8 @@
+indexes:
+
+- kind: Dog
+  ancestor: yes
+  properties:
+  - name: name
+    direction: asc
+  - name: type
