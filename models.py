@@ -7,6 +7,13 @@ KEY = 'mensaje'
 class Mensaje(db.Model):
     contenido = db.StringProperty(indexed=True)
 
+    def save_mensaje(self, contenido):
+        if contenido is None:
+            return None
+
+        self.contenido = contenido
+        self.put()
+
 
 class ConstructKey():
     def __init__(self, name=DEFAULT_NAME):

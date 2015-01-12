@@ -29,8 +29,7 @@ class TaskHandler(webapp2.RequestHandler):
         time.sleep(120)
 
         mensaje = Mensaje()
-        mensaje.contenido = var1
-        mensaje.put()
+        mensaje.save_mensaje(contenido=var1)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
