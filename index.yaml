@@ -1,0 +1,7 @@
+indexes:
+
+- kind: Mensaje
+  ancestor: yes
+  properties:
+  - name: contenido
+    direction: asc
