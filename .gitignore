@@ -1,5 +1,6 @@
 .idea
 calendar_ex/client_secret.json
+calendar_ex/client_secrets.json
 calendar_ex/key.json
 *.pyc
 
@@ -10,3 +11,11 @@ googleapiclient
 httplib2
 oauth2client
 uritemplate
+
+local
+bin
+lib
+include
+pip-selfcheck.json
+
+libs

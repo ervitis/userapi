@@ -1,9 +1,9 @@
-from apiclient import discovery
-from oauth2client import client
-from oauth2client import appengine
+from libs.apiclient import discovery
+from libs.oauth2client import client
+from libs.oauth2client import appengine
 from google.appengine.api import memcache
 
-import httplib2
+from libs import httplib2
 import os
 
 MISSING_CLIENT_SECRETS = """
@@ -24,7 +24,7 @@ class CalendarService():
         self._http = httplib2.Http(memcache)
 
     def _create_client_secrets(self):
-        self._client_secrets = os.path.join(os.path.dirname(__file__), 'client_secret.json')
+        self._client_secrets = os.path.join(os.path.dirname(__file__), 'client_secrets.json')
 
     def _create_service(self):
         self._service = discovery.build(

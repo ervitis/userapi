@@ -1,3 +1,8 @@
+import os
+from google.appengine.ext import vendor
+
+vendor.add(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'libs'))
+
 import webapp2
 from calendar_ex.calendar_service import CalendarService
 
